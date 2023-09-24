@@ -19,5 +19,4 @@ def new_auction(id):
     if row[0] > 0:
         result = db.session.execute(text("SELECT id, name, starting_price FROM items WHERE id = :id"))
         row = result.fetchone()
-        db.session.execute(text("INSERT INTO auction_history(item_id, winner_id, price, time) VALUES (:id, NULL, row["starting_price"])"))
-        
+        db.session.execute(text("INSERT INTO auction_history(item_id, winner_id, price, time) VALUES (:id, NULL, row[starting_price])"))
