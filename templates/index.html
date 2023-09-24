@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<title>Auction</title>
+<h1>Welcome to the auction!</h1>
+<p>
+Current auction:
+<p>
+<img src="/static/{{ item[0][1] }}.png" alt="Current lot">
+<p>
+{{ item.name }} <br><!--why doesn't this work? investigate-->
+
+<form action="/result" method="POST">
+Bid: <br>
+<input type="radio" name="bid" value="5" checked> 5€
+<input type="radio" name="bid" value="10"> 10€
+<input type="radio" name="bid" value="20"> 20€
+<input type="submit" value="Submit">
+</form>
