@@ -83,7 +83,7 @@ def logout():
     del session["id"]
     return redirect("/")
 
-@app.route("/secretpage")
+@app.route("/secretpage") # kept for testing
 def secret():
     auctions.new_auction(1)
     return redirect("/")
@@ -91,8 +91,10 @@ def secret():
 @app.route("/mypage", methods=["GET", "POST"])
 def mypage():
     my_id = session["id"]
+    print(my_id)
     my_username = session["username"]
     item_list = auctions.get_won_auctions(my_id)
+    print(item_list)
     return render_template("won_items.html",items = item_list, username = my_username)
 
 atexit.register(lambda:scheduler.shutdown())

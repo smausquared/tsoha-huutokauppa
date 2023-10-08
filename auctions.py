@@ -46,12 +46,14 @@ def bid(auction_id, leader_id, increment):
     db.session.commit()
 
 def get_auction():
-    sql = "SELECT A.id, A.item_id, A.winner_id, A.price, A.time, I.name FROM auction_history A LEFT JOIN items I ON A.item_id = I.id ORDER BY A.id DESC LIMIT 1 OFFSET 1"
+    sql = "SELECT A.id, A.item_id, A.winner_id, A.price, A.time, I.name \
+    FROM auction_history A LEFT JOIN items I ON A.item_id = I.id ORDER BY A.id DESC LIMIT 1 OFFSET 1"
     result = db.session.execute(text(sql))
     return result.fetchone()
 
 def get_won_auctions(id):
-    sql = "SELECT I.id, I.name, A.price, A.time FROM auction_history A LEFT JOIN items I ON A.item_id = I.id LEFT JOIN users ON A.winner_id = :id ORDER BY A.id DESC OFFSET 2"
+    sql = "SELECT A.item_id, I.name, A.price, A.time FROM auction_history \
+    A LEFT JOIN items I ON A.item_id = I.id WHERE A.winner_id = :id ORDER BY A.id DESC OFFSET 2"
     result = db.session.execute(text(sql),{"id":id})
     return result.fetchall()
 
@@ -60,19 +62,9 @@ def get_item_count():
     return result.fetchone()
 
 def new_auction(id):
-    result1 = db.session.execute(text("SELECT COUNT(*) FROM auction_history"))
-    row1 = result1.fetchone()
-    itemcount = get_item_count()
-
     result = db.session.execute(text("SELECT id, name, starting_price FROM items WHERE id = :id"), {"id":id})
     row = result.fetchone()
-    db.session.execute(text("INSERT INTO auction_history(item_id, winner_id, price, time) VALUES (:id, NULL, :starting_price, NOW())"), {"id":id, "starting_price":row[2]})
+    db.session.execute(text("INSERT INTO auction_history (item_id, winner_id, price, time) \
+                            VALUES (:id, NULL, :starting_price, NOW())"), {"id":id, "starting_price":row[2]})
     db.session.commit()
-    # the app needs there to be at least two items in the auction history. 
-    # we'll add another automatically if the history is empty
-    if row1[0] < 1:
-        id2 = randint(1,itemcount)
-        result = db.session.execute(text("SELECT id, name, starting_price FROM items WHERE id = :id"), {"id":id2})
-        row = result.fetchone()
-        db.session.execute(text("INSERT INTO auction_history(item_id, winner_id, price, time) VALUES (:id, NULL, :starting_price, NOW())", {"id":id2, "starting_price":row[2]}))
-        db.session.commit()
+  
