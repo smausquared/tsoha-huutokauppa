@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<title>My page</title>
+<h1>My page</h1>
+<p>
+{%for item in items %}
+<ul>
+    <li> {{ item.name }}, {{ item.price }}, {{ item.time }} </li>
+    <li><img src="/static/{{ item.item_id }}.png" alt="Won item"></li>
+</ul>
+{% endfor %}
+<p>
+<a href="/">Back</a>

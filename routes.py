@@ -1,13 +1,36 @@
 from app import app
+from random import randint
 import auctions
+import atexit
 from flask import render_template, redirect, session, request
 from werkzeug.security import check_password_hash, generate_password_hash
+from apscheduler.schedulers.background import BackgroundScheduler
+
+def every_two_min():
+    with app.app_context():
+        itemcount = auctions.get_item_count()[0]
+    id = randint(1,itemcount)
+    with app.app_context():
+        auctions.new_auction(id)
+
+def refresh():
+    return redirect("/")
+
+with app.app_context():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=refresh,trigger="interval", minutes = 2)
+    scheduler.add_job(func=every_two_min, trigger="interval", minutes = 2)
+    scheduler.start()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if session:
         item = auctions.get_auction()
-        return render_template("index.html",item=item, session = session)
+        if item[2]:
+            winner = auctions.find_user(item[2])[0]
+        else:
+            winner = ""
+        return render_template("index.html",item=item, session = session, winner = winner)
     return redirect("/register")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -36,14 +59,39 @@ def login_result():
     username = request.form["username"]
     password = request.form["password"]
     serverword = auctions.get_hash(username)[0]
-    print(serverword)
     if check_password_hash(serverword, password):
+        user_id = auctions.find_id(username)[0]
         session["username"] = username
+        session["id"] = user_id
         return redirect("/")
     else:
         return redirect("/login")
+
+@app.route("/bid_result", methods=["GET","POST"])
+def bid_result():
+    current_auction = auctions.get_auction()
+    current_price = int(current_auction[3])
+    auction_id = current_auction[0]
+    increment = int(request.form["bid"])
+    if current_price + increment > current_price:
+        auctions.bid(auction_id, session["id"], current_price + increment)
+    return redirect("/") 
 
 @app.route("/logout")
 def logout():
     del session["username"]
     return redirect("/")
+
+@app.route("/secretpage")
+def secret():
+    auctions.new_auction(1)
+    return redirect("/")
+
+@app.route("/mypage", methods=["GET", "POST"])
+def mypage():
+    my_id = session["id"]
+    my_username = session["username"]
+    item_list = auctions.get_won_auctions(my_id)
+    return render_template("won_items.html",items = item_list, username = my_username)
+
+atexit.register(lambda:scheduler.shutdown())
