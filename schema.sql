@@ -23,5 +23,17 @@ INSERT INTO items (name, starting_price)
 );
 
 INSERT INTO items (name, starting_price)
-    VALUES ('Cereal box toy', 50
+    VALUES ('Mona Lisa, authentic', 5
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('Kawasaki motorcycle', 400
+);
+
+INSERT INTO auction_history (item_id, winner_id, price, time)
+    VALUES (2, NULL, 5, NOW()
+);
+
+INSERT INTO auction_history (item_id, winner_id, price, time)
+    VALUES (1, NULL, 300, NOW()
 );
