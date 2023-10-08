@@ -80,6 +80,7 @@ def bid_result():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["id"]
     return redirect("/")
 
 @app.route("/secretpage")
