@@ -6,6 +6,8 @@ from flask import render_template, redirect, session, request
 from werkzeug.security import check_password_hash, generate_password_hash
 from apscheduler.schedulers.background import BackgroundScheduler
 
+TIMER = 119
+
 def every_two_min():
     with app.app_context():
         itemcount = auctions.get_item_count()[0]
@@ -13,12 +15,16 @@ def every_two_min():
     with app.app_context():
         auctions.new_auction(id)
 
-def refresh():
-    return redirect("/")
+def timer_tracker():
+    global TIMER
+    if TIMER > 0:
+        TIMER -= 1
+    else:
+        TIMER = 119
 
 with app.app_context():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=refresh,trigger="interval", minutes = 2)
+    scheduler.add_job(func=timer_tracker,trigger="interval", seconds = 1)
     scheduler.add_job(func=every_two_min, trigger="interval", minutes = 2)
     scheduler.start()
 
@@ -30,12 +36,12 @@ def index():
             winner = auctions.find_user(item[2])[0]
         else:
             winner = ""
-        return render_template("index.html",item=item, session = session, winner = winner)
+        return render_template("index.html",item=item, session=session, winner=winner, timer=TIMER)
     return redirect("/register")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register_form.html", session = session)
+    return render_template("register_form.html", session=session)
 
 @app.route("/register_result", methods=["GET", "POST"])
 def register_result():

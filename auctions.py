@@ -52,8 +52,8 @@ def get_auction():
     return result.fetchone()
 
 def get_won_auctions(id):
-    sql = "SELECT A.item_id, I.name, A.price, A.time FROM auction_history \
-    A LEFT JOIN items I ON A.item_id = I.id WHERE A.winner_id = :id ORDER BY A.id DESC OFFSET 2"
+    sql = "SELECT A.item_id, I.name, A.price, A.time FROM (SELECT * FROM auction_history ORDER BY id DESC OFFSET 2)\
+    A LEFT JOIN items I ON A.item_id = I.id WHERE A.winner_id = :id ORDER BY A.id DESC"
     result = db.session.execute(text(sql),{"id":id})
     return result.fetchall()
 
@@ -67,4 +67,3 @@ def new_auction(id):
     db.session.execute(text("INSERT INTO auction_history (item_id, winner_id, price, time) \
                             VALUES (:id, NULL, :starting_price, NOW())"), {"id":id, "starting_price":row[2]})
     db.session.commit()
-  
