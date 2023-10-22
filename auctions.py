@@ -75,7 +75,7 @@ def send_feedback(id, title, content):
 
 def is_admin(id):
     sql = text("SELECT role FROM users WHERE id = :id")
-    result = db.session.execute(sql,{"id":id})
+    result = db.session.execute(sql, {"id":id})
     if int(result.fetchone()[0]) == 1:
         return True
     return False
@@ -94,7 +94,6 @@ def abort_auction():
     auction_id = get_auction()[0]
     sql = text("UPDATE auction_history SET winner_id = NULL WHERE id = :auction_id")
     db.session.execute(sql, {"auction_id":auction_id})
-    db.session.commit()
-
-    itemcount = get_item_count()
+    itemcount = get_item_count()[0]
     new_auction(randint(1,itemcount))
+    db.session.commit()

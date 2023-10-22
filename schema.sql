@@ -11,6 +11,12 @@ CREATE TABLE items (
     starting_price INTEGER
 );
 
+CREATE TABLE bots (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR (50),
+    bid_amount INTEGER
+);
+
 CREATE TABLE auction_history (
     id SERIAL PRIMARY KEY,
     item_id INTEGER REFERENCES items,
@@ -37,6 +43,38 @@ INSERT INTO items (name, starting_price)
 
 INSERT INTO items (name, starting_price)
     VALUES ('Kawasaki motorcycle', 400
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('uPhone 12', 200
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('2 hours of high-quality programmer labor', 50
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('Playstendo switchable', 45
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('2022 Ferrari', 80000
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('Precious ring', 100
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('X company', 50000000
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('5kg Sweet strawberries', 10
+);
+
+INSERT INTO items (name, starting_price)
+    VALUES ('Election tampering', 50000
 );
 
 INSERT INTO auction_history (item_id, winner_id, price, time)

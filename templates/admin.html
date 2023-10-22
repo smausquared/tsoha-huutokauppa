@@ -3,5 +3,25 @@
 {% block title %} Admin page {% endblock %}
 {% block content %}
 <h2>Admin page</h2>
-
+<hr>
+<h3>Admin controls</h3><br>
+Abort current auction<br>
+<form action="/abort" method="POST">
+<input type="submit" value="Abort">
+</form><br>
+Add new item to the auction pool
+<form action="/newitem" method="POST">
+Item name: <input type="text" name="name"> <br>
+Starting price: <input type="text" name="price"> <br>
+<input type="submit" value="Add">
+</form><br>
+<hr>
+<h2>User feedback</h2><br>
+{% for item in feedback %}
+Sender: {{ item.username }}<br>
+Topic: {{ item.title }}<br>
+Message: {{ item.content }}<br>
+Sent at {{ item.time }}<br>
+---------------------------<br>
+{% endfor %}
 {% endblock %}

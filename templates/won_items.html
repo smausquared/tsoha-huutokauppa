@@ -2,13 +2,13 @@
 {% extends "layout.html" %}
 {% block title %} My page {% endblock %}
 {% block content %}
-<h2>My page</h2>
-<p>
-{%for item in items %}
+<h2>My page</h2><br>
 <ul>
-    <li> {{ item.name }}, {{ item.price }}, {{ item.time }} </li>
-    <img src="/static/{{ item.item_id }}.png" alt="Won item">
-</ul>
+{%for item in items %}
+    <li> {{ item.name }}, auction time {{ item.time }}<br>
+    Bought for {{ item.price }}€<br>
+    <img src="/static/{{ item.item_id }}.png" width="180" height="180" alt="Won item"> </li>
 {% endfor %}
+</ul>
 <p>
 {% endblock %}

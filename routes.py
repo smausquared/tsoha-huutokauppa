@@ -106,10 +106,12 @@ def feedback_result():
         id = session["id"]
         if len(title) > 0 and len(message) > 0:
             auctions.send_feedback(id, title, message)
-            flash("Message sent successfully!")
-            return redirect("/")
+            flash("Thanks for your feedback!")
+        else:
+            flash("Topic and message can't be empty")
+        return redirect("/")
     except:
-        return render_template("error.html", error="Something went wrong! lol")
+        return render_template("error.html", error="Something went wrong!")
 
 @app.route("/logout")
 def logout():
@@ -131,11 +133,11 @@ def mypage():
         my_id = session["id"]
         my_username = session["username"]
         item_list = auctions.get_won_auctions(my_id)
+        isadmin = auctions.is_admin(session["id"])
         print(item_list)
-        return render_template("won_items.html", items=item_list, username=my_username)
+        return render_template("won_items.html", items=item_list, username=my_username, isadmin=isadmin)
     except:
         return render_template("error.html", error="Hey! Log in!")
-atexit.register(lambda:scheduler.shutdown())
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
@@ -148,3 +150,38 @@ def admin():
             return render_template("error.html", error="You do not have the right")
     except:
         return render_template("error.html", error="Log in!")
+
+@app.route("/abort", methods=["GET", "POST"])
+def abort():
+    try:
+        isadmin = auctions.is_admin(session["id"])
+        if isadmin:
+            auctions.abort_auction()
+            flash("Auction successfully aborted")
+            return redirect("/admin")
+        else:
+            return render_template("error.html", error="You do not have the right")
+    except:
+        flash("Something went wrong! Impressive!")
+        return redirect("/admin")
+
+@app.route("/newitem", methods=["GET", "POST"])
+def newitem():
+    try:
+        name = request.form["name"]
+        price = request.form["price"]
+        isadmin = auctions.is_admin(session["id"])
+        if isadmin:
+            if len(name) > 0 and len(price) > 0:
+                auctions.new_item(name, price)
+                flash("Successfully created new item")
+            else:
+                flash("Name and price can't be empty")
+            return redirect("/admin")
+        else:
+            return render_template("error.html", error="You do not have the right")
+    except:
+        flash("Something went wrong! Impressive!")
+        return redirect("/admin")
+
+atexit.register(lambda:scheduler.shutdown())
