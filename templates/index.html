@@ -1,8 +1,10 @@
 <!DOCTYPE html>
+{% extends "layout.html" %}
 <meta http-equiv="refresh" content="15" />
-<title>Auction</title>
-<h1>Auction house</h1>
+{% block title %} Front page {% endblock %}
 <p>
+{% block content %}
+<h2>Front page</h2>
 Welcome, {{ session.username }} <br>
 Current auction:
 <p>
@@ -20,7 +22,20 @@ Bid: <br>
 <input type="radio" name="bid" value="20"> 20€
 <input type="submit" value="Submit">
 </form>
+<br>
+Or a bid of your choice: (Only the number amount without fractions!) <br>
+<form action="/bid_result" method="POST">
+<input type="text" name="bid">
+<input type="submit" value="Submit">
+</form>
+<br>
 
-<a href="/logout">Log out</a>
-<p>
-<a href="/mypage">My items</a>
+<form action="/feedback_result" method="POST">
+Send feedback: <br>
+Topic: <input type="text" name="title"> <br>
+Message: <br>
+<textarea name="message" rows="5" cols="50"></textarea><br>
+<input type="submit" value="Send">
+</form>
+
+{% endblock %}

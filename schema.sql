@@ -18,6 +18,13 @@ CREATE TABLE auction_history (
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE feedback (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users,
+    content VARCHAR (1000),
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT INTO items (name, starting_price)
     VALUES ('Ghost Game', 300
 );

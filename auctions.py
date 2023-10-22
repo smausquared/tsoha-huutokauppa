@@ -67,3 +67,8 @@ def new_auction(id):
     db.session.execute(text("INSERT INTO auction_history (item_id, winner_id, price, time) \
                             VALUES (:id, NULL, :starting_price, NOW())"), {"id":id, "starting_price":row[2]})
     db.session.commit()
+
+def send_feedback(id, content):
+    sql = text("INSERT INTO feedback (user_id, content) VALUES (:id, :content)")
+    db.session.execute(sql, {"id":id,"content":content})
+    db.session.commit()

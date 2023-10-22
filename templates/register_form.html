@@ -3,6 +3,7 @@
 {% if session.username %}
 <p>Welcome, {{ session.username }}</p>
 {% else %}
+<h1>Register</h1>
 <form action="/register_result" method="POST">
 <p>Username:<br>
 <input type="text" name="username"></p>

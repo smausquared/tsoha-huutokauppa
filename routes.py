@@ -51,8 +51,7 @@ def register_result():
         hash = generate_password_hash(password)
         auctions.create_user(username, hash)
         return redirect("/login")
-    else:
-        return redirect("/register")
+    return render_template("error.html", error="Username and password can't be empty!")
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -62,31 +61,56 @@ def login():
 
 @app.route("/login_result", methods=["GET","POST"])
 def login_result():
-    username = request.form["username"]
-    password = request.form["password"]
-    serverword = auctions.get_hash(username)[0]
-    if check_password_hash(serverword, password):
-        user_id = auctions.find_id(username)[0]
-        session["username"] = username
-        session["id"] = user_id
-        return redirect("/")
-    else:
-        return redirect("/login")
+    try:
+        username = request.form["username"]
+        password = request.form["password"]
+        serverword = auctions.get_hash(username)[0]
+        if check_password_hash(serverword, password):
+            user_id = auctions.find_id(username)[0]
+            session["username"] = username
+            session["id"] = user_id
+            return redirect("/")
+        else:
+            return redirect("/login")
+    except:
+        return render_template("error.html", error="User not found")
 
 @app.route("/bid_result", methods=["GET","POST"])
 def bid_result():
-    current_auction = auctions.get_auction()
-    current_price = int(current_auction[3])
-    auction_id = current_auction[0]
-    increment = int(request.form["bid"])
-    if current_price + increment > current_price:
+    try:
+        current_auction = auctions.get_auction()
+        current_price = int(current_auction[3])
+        auction_id = current_auction[0]
+        increment = int(request.form["bid"])
+        if current_price + increment <= current_price:
+            return render_template("error.html", error="Invalid bid")
         auctions.bid(auction_id, session["id"], current_price + increment)
-    return redirect("/") 
+        return redirect("/")
+    except:
+        return render_template("error.html", error="Invalid bid")
+
+@app.route("/feedback_result", methods=["GET","POST"])
+def feedback_result():
+    try:
+        current_auction = auctions.get_auction()
+        current_price = int(current_auction[3])
+        auction_id = current_auction[0]
+        increment = int(request.form["bid"])
+        if current_price + increment <= current_price:
+            return render_template("error.html", error="Invalid bid")
+        auctions.bid(auction_id, session["id"], current_price + increment)
+        return redirect("/")
+    except:
+        return render_template("error.html", error="Invalid bid")
+
 
 @app.route("/logout")
 def logout():
-    del session["username"]
-    del session["id"]
+    try:
+        del session["username"]
+        del session["id"]
+    except:
+        pass
     return redirect("/")
 
 @app.route("/secretpage") # kept for testing
@@ -96,11 +120,13 @@ def secret():
 
 @app.route("/mypage", methods=["GET", "POST"])
 def mypage():
-    my_id = session["id"]
-    print(my_id)
-    my_username = session["username"]
-    item_list = auctions.get_won_auctions(my_id)
-    print(item_list)
-    return render_template("won_items.html",items = item_list, username = my_username)
-
+    try:
+        my_id = session["id"]
+        print(my_id)
+        my_username = session["username"]
+        item_list = auctions.get_won_auctions(my_id)
+        print(item_list)
+        return render_template("won_items.html",items = item_list, username = my_username)
+    except:
+        return render_template("error.html", error="Hey! Log in!")
 atexit.register(lambda:scheduler.shutdown())
