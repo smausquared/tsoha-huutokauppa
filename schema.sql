@@ -13,7 +13,7 @@ CREATE TABLE items (
 
 CREATE TABLE bots (
     id SERIAL PRIMARY KEY,
-    username VARCHAR (50),
+    user_id INTEGER,
     bid_amount INTEGER
 );
 
@@ -83,4 +83,52 @@ INSERT INTO auction_history (item_id, winner_id, price, time)
 
 INSERT INTO auction_history (item_id, winner_id, price, time)
     VALUES (1, NULL, 300, NOW()
+);
+
+INSERT INTO users (username, role, password)
+    VALUES ('MoneyMcBags', 0, NULL
+);
+
+INSERT INTO bots (user_id, bid_amount)
+    VALUES (1, 200
+);
+
+INSERT INTO users (username, role, password)
+    VALUES ('imTwelve', 0, NULL
+);
+
+INSERT INTO bots (user_id, bid_amount)
+    VALUES (2, 69
+);
+
+INSERT INTO users (username, role, password)
+    VALUES ('theLegend27', 0, NULL
+);
+
+INSERT INTO bots (user_id, bid_amount)
+    VALUES (3, 27
+);
+
+INSERT INTO users (username, role, password)
+    VALUES ('bigCoach', 0, NULL
+);
+
+INSERT INTO bots (user_id, bid_amount)
+    VALUES (4, 10
+);
+
+INSERT INTO users (username, role, password)
+    VALUES ('Emppu', 0, NULL
+);
+
+INSERT INTO bots (user_id, bid_amount)
+    VALUES (5, 15
+);
+
+INSERT INTO users (username, role, password)
+    VALUES ('James', 0, NULL
+);
+
+INSERT INTO bots (user_id, bid_amount)
+    VALUES (6, 20
 );

@@ -45,9 +45,21 @@ def bid(auction_id, leader_id, increment):
     db.session.execute(sql, {"leader_id":leader_id, "increment":increment,"auction_id":auction_id})    
     db.session.commit()
 
-def get_auction():
+def get_auction(): # made obsolete on the main page but kept for other functions
     sql = "SELECT A.id, A.item_id, A.winner_id, A.price, A.time, I.name \
     FROM auction_history A LEFT JOIN items I ON A.item_id = I.id ORDER BY A.id DESC LIMIT 1 OFFSET 1"
+    result = db.session.execute(text(sql))
+    return result.fetchone()
+
+def get_auctions():
+    sql = "SELECT A.id, A.item_id, A.winner_id, A.price, A.time, I.name \
+    FROM auction_history A LEFT JOIN items I ON A.item_id = I.id ORDER BY A.id DESC LIMIT 3"
+    result = db.session.execute(text(sql))
+    return result.fetchall()
+
+def get_next_auction():
+    sql = "SELECT A.id, A.item_id, A.winner_id, A.price, A.time, I.name \
+    FROM auction_history A LEFT JOIN items I ON A.item_id = I.id ORDER BY A.id DESC LIMIT 1"
     result = db.session.execute(text(sql))
     return result.fetchone()
 
@@ -87,7 +99,7 @@ def get_feedback():
 
 def new_item(name, price):
     sql = text("INSERT INTO items (name, starting_price) VALUES (:name, :price)")
-    db.session.execute(sql,{"name":name, "starting_price":price})
+    db.session.execute(sql, {"name":name, "price":price})
     db.session.commit()
 
 def abort_auction():
@@ -97,3 +109,8 @@ def abort_auction():
     itemcount = get_item_count()[0]
     new_auction(randint(1,itemcount))
     db.session.commit()
+
+def get_bot_bid(id):
+    sql = text("SELECT bid_amount FROM bots WHERE user_id = :id")
+    result = db.session.execute(sql, {"id":id})
+    return result.fetchone()

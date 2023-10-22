@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 {% extends "layout.html" %}
-<meta http-equiv="refresh" content="15" />
 {% block title %} Front page {% endblock %}
 <p>
 {% block content %}
+<meta http-equiv="refresh" content="15" />
 <h2>Front page</h2>
 Welcome, {{ session.username }} <br>
 Current auction:
@@ -29,6 +29,17 @@ Or an <b>increment</b> of your choice: (Only the number amount without fractions
 <input type="submit" value="Submit">
 </form>
 <br>
+<hr>
+{% if last_item[1] %}
+Last auction: {{ last_item.name }}<br>
+<img src="/static/{{ last_item.item_id }}.png" width="100" height="100" alt="Last lot"><br>
+Winner: {{ last_winner }}<br>
+Price: {{ last_item.price }}€<br>
+{% endif %}
+<p>
+Next auction: {{ next_item.name }}<br>
+<img src="/static/{{ next_item.item_id }}.png" width="100" height="100" alt="Next lot"><br>
+Price: {{ next_item.price }}€<br>
 <hr>
 <form action="/feedback_result" method="POST">
 Send feedback: <br>
