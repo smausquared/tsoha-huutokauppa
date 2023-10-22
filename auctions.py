@@ -2,24 +2,6 @@ from db import db
 from sqlalchemy.sql import text
 from random import randint
 
-# the way the app is going to function, or useful notes for me and you
-#
-# so for the front page we want to be able to see the previous auction,
-# the current auction and the next auction. We can do this by
-# so:
-# the current auction is always going to be the second latest item in the
-# auction history: that is, the auction with the second biggest id. when the auction ends,
-# a new auction gets added to the auction_history table: the new auction is the
-# next auction, and the old one now doesn't have the highest id in the table,
-# making it the current auction.
-#
-# first though, we need a login function. I think we're going to do it
-# the easy way and make it so that you can't see the main page if you're not
-# logged in!
-# i think it's also possible to make bot users in 
-# flask, so that's another thing to develop once
-# the page is functioning, so you're not bidding alone.
-
 def create_user(username, password, role):
     sql = text("INSERT INTO users (username, password, role) VALUES (:username, :password, :role)")
     db.session.execute(sql, {"username":username, "password":password, "role":role})

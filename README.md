@@ -1,4 +1,6 @@
 # Huutokauppasovellus
+Sovellusta voi kokeilla osoitteessa [https://tsoha-huutokauppa.fly.dev/](https://tsoha-huutokauppa.fly.dev/)
+
 Sovelluksella voi seurata nopeita kahden minuutin huutokauppoja. Ylläpitäjä voi lisätä huutokaupattavia esineitä, joita käyttäjät voivat huutaa.
 
 Sovelluksella on seuraavanlaisia ominaisuuksia:
@@ -25,6 +27,8 @@ Alusta tietokanta:
 ```bash
 psql < schema.sql
 ```
+
+Hei kaveri! Nyt siun pitää tehä .env-tiedosto ite! Jos et semmosta halua tehdä, niin testaamaan pääset fly.io-deploysta.
 
 Käynnistä sovellus:
 ```bash
