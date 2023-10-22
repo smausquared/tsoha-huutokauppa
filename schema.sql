@@ -1,6 +1,7 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR (50) UNIQUE,
+    role INTEGER,
     password TEXT
 );
 
@@ -21,6 +22,7 @@ CREATE TABLE auction_history (
 CREATE TABLE feedback (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users,
+    title VARCHAR (50),
     content VARCHAR (1000),
     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
