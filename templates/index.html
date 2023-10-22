@@ -20,12 +20,15 @@ Bid: <br>
 <input type="radio" name="bid" value="5" checked> 5€
 <input type="radio" name="bid" value="10"> 10€
 <input type="radio" name="bid" value="20"> 20€
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Submit">
+
 </form>
 <br>
 Or an <b>increment</b> of your choice: (Only the number amount without fractions!)<br>
 <form action="/bid_result" method="POST">
 <input type="text" name="bid">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Submit">
 </form>
 <br>
@@ -46,6 +49,7 @@ Send feedback: <br>
 Topic: <input type="text" name="title"> <br>
 Message: <br>
 <textarea name="message" rows="5" cols="50"></textarea><br>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Send">
 </form>
 

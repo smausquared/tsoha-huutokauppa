@@ -7,12 +7,14 @@
 <h3>Admin controls</h3><br>
 Abort current auction<br>
 <form action="/abort" method="POST">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Abort">
 </form><br>
 Add new item to the auction pool
 <form action="/newitem" method="POST">
 Item name: <input type="text" name="name"> <br>
 Starting price: <input type="text" name="price"> <br>
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Add">
 </form><br>
 <hr>

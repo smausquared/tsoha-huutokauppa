@@ -2,7 +2,8 @@ from app import app
 from random import randint
 import auctions
 import atexit
-from flask import render_template, redirect, session, request, flash
+import secrets
+from flask import render_template, redirect, session, request, flash, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -87,7 +88,7 @@ def login():
         if session["id"]:
             return redirect("/")
     except:
-        return render_template("login_form.html")
+        return render_template("login_form.html", session=session)
 
 @app.route("/login_result", methods=["GET","POST"])
 def login_result():
@@ -99,6 +100,7 @@ def login_result():
             user_id = auctions.find_id(username)[0]
             session["username"] = username
             session["id"] = user_id
+            session["csrf_token"] = secrets.token_hex(16)
             flash("Logged in successfully!")
             return redirect("/")
         else:
@@ -111,6 +113,8 @@ def login_result():
 @app.route("/bid_result", methods=["GET","POST"])
 def bid_result():
     try:
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         current_auction = auctions.get_auction()
         current_price = int(current_auction[3])
         auction_id = current_auction[0]
@@ -125,6 +129,8 @@ def bid_result():
 @app.route("/feedback_result", methods=["GET","POST"])
 def feedback_result():
     try:
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         title = request.form["title"]
         message = request.form["message"]
         id = session["id"]
@@ -142,13 +148,9 @@ def logout():
     try:
         del session["username"]
         del session["id"]
+        del session["csrf_token"]
     except:
         pass
-    return redirect("/")
-
-@app.route("/secretpage") # kept for testing
-def secret():
-    auctions.new_auction(1)
     return redirect("/")
 
 @app.route("/mypage", methods=["GET", "POST"])
@@ -169,15 +171,17 @@ def admin():
         isadmin = auctions.is_admin(session["id"])
         if isadmin:
             feedback = auctions.get_feedback()
-            return render_template("admin.html", isadmin=isadmin, feedback=feedback)
+            return render_template("admin.html", isadmin=isadmin, feedback=feedback, session=session)
         else:
             return render_template("error.html", error="You do not have the right")
     except:
         return render_template("error.html", error="Log in!")
 
 @app.route("/abort", methods=["GET", "POST"])
-def abort():
+def abortauction():
     try:
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         isadmin = auctions.is_admin(session["id"])
         if isadmin:
             auctions.abort_auction()
@@ -192,6 +196,8 @@ def abort():
 @app.route("/newitem", methods=["GET", "POST"])
 def newitem():
     try:
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
         name = request.form["name"]
         price = int(request.form["price"])
         isadmin = auctions.is_admin(session["id"])
