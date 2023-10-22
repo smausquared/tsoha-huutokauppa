@@ -1,6 +1,8 @@
 # Huutokauppasovellus
 Sovellusta voi kokeilla osoitteessa [https://tsoha-huutokauppa.fly.dev/](https://tsoha-huutokauppa.fly.dev/)
 
+Fly.ion päässä joku bugi saa etusivun ajastimen tweakaamaan, tähän en valitettavasti saanut koskaan korjausta 😭 lokaalisti toimii!
+
 Sovelluksella voi seurata nopeita kahden minuutin huutokauppoja. Ylläpitäjä voi lisätä huutokaupattavia esineitä, joita käyttäjät voivat huutaa.
 
 Sovelluksella on seuraavanlaisia ominaisuuksia:
